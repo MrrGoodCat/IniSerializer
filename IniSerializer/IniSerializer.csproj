@@ -40,7 +40,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IniAttributes.cs" />
+    <Compile Include="IniKeyAttribute.cs" />
+    <Compile Include="IniSectionAttribute.cs" />
     <Compile Include="IniSerializer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

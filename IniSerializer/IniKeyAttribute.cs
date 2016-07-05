@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace IniSerializer
 {
-    class IniAttributes
-    { 
-
+    public class IniKeyAttribute : Attribute
+    {
+        public string ElementName { get; set; }
     }
 }
