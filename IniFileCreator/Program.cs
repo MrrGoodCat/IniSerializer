@@ -26,12 +26,13 @@ namespace IniFileCreator
 
             iniS.getAtt(stud);
 
-            using (TextWriter writer = new StreamWriter("Out.ini"))
-            {
-                xml.Serialize(writer, stud);
-            }
+            //using (TextWriter writer = new StreamWriter("Out.ini"))
+            //{
+            //    xml.Serialize(writer, stud);
+            //}
 
-            
+            iniS.testMethod(stud);
+  
             Console.ReadLine();
         }
     }

@@ -8,6 +8,7 @@ using System.IO;
 using System.Reflection;
 
 
+
 namespace IniSerializer
 {
     public class IniSerializer
@@ -19,12 +20,14 @@ namespace IniSerializer
         List<string> AttNames;
         List<IniSectionAttribute> SectList;
         List<IniKeyAttribute> KeyList;
+        List<Type> Att;
 
         public IniSerializer()
         {
             AttNames = new List<string>();
             SectList = new List<IniSectionAttribute>();
             KeyList = new List<IniKeyAttribute>();
+            Att = new List<Type>();
 
         }
 
@@ -46,29 +49,23 @@ namespace IniSerializer
         {
             foreach (var item in t.GetType().GetMembers())
             {
-                IniKeyAttribute ika;
                 IniSectionAttribute isa;
                 isa = (IniSectionAttribute)Attribute.GetCustomAttribute(item, typeof(IniSectionAttribute));
-                ika = (IniKeyAttribute)Attribute.GetCustomAttribute(item, typeof(IniKeyAttribute));
                 if (isa != null)
                 {
                     SectList.Add(isa);
-                }
-                if (ika != null)
-                {
-                    KeyList.Add(ika);
-                }                                               
+                }                                              
             }
 
-            foreach (var att in SectList)
-            {
-                Console.WriteLine(att.ElementName);
-            }
+            //foreach (var att in SectList)
+            //{
+            //    Console.WriteLine(att.ElementName);
+            //}
 
-            foreach (var att in KeyList)
-            {
-                Console.WriteLine(att.ElementName);
-            }
+            //foreach (var att in KeyList)
+            //{
+            //    Console.WriteLine(att.ElementName);
+            //}
 
             //foreach (var item in t.GetType().GetMembers())
             //{
@@ -83,5 +80,23 @@ namespace IniSerializer
             //}
         }
 
+
+        public void testMethod(object t)
+        {
+            var Atts = from at in t.GetType().GetProperties()
+                       where at.GetCustomAttributes(false).Any(a => a is IniKeyAttribute)
+                       select at;
+
+            //var Attk = from at in t.GetProperties()
+            //           where at.GetCustomAttributes(false).Any(a => a is IniKeyAttribute && a is IniKeyAttribute)
+            //           select at;
+            getAtt(t);
+            foreach (var section in Atts)
+            {
+                IniKeyAttribute ika;
+                ika = (IniKeyAttribute)Attribute.GetCustomAttribute(section, typeof(IniKeyAttribute));
+                Console.WriteLine(ika.ElementName + " = " + section.GetValue(t));
+            }
+        }
     }
 }
