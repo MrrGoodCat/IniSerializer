@@ -8,6 +8,6 @@ namespace IniSerializer
 {
     public class IniKeyAttribute : Attribute
     {
-        public string ElementName { get; set; }
+        public string ElementName { get; set; } = "Default";
     }
 }

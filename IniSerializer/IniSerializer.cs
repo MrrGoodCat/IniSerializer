@@ -13,19 +13,16 @@ namespace IniSerializer
 {
     public class IniSerializer
     {
-        
-        // = new IniSectionAttribute();
-        XmlSerializer xmlser;
-        Assembly asm;
+
         List<string> AttNames;
-        List<IniSectionAttribute> SectList;
+        List<string> SectList;
         List<IniKeyAttribute> KeyList;
         List<Type> Att;
 
         public IniSerializer()
         {
             AttNames = new List<string>();
-            SectList = new List<IniSectionAttribute>();
+            SectList = new List<string>();
             KeyList = new List<IniKeyAttribute>();
             Att = new List<Type>();
 
@@ -36,7 +33,7 @@ namespace IniSerializer
             StringBuilder sb = new StringBuilder();
             foreach (var ika in SectList)
             {
-                sb.AppendLine(ika.ElementName + "value");
+                sb.AppendLine(ika + "value");
                 TextWriter sw = stream;
                 sw.Write(sb.ToString());
             }
@@ -53,31 +50,10 @@ namespace IniSerializer
                 isa = (IniSectionAttribute)Attribute.GetCustomAttribute(item, typeof(IniSectionAttribute));
                 if (isa != null)
                 {
-                    SectList.Add(isa);
+                    SectList.Add(isa.ElementName);
                 }                                              
             }
 
-            //foreach (var att in SectList)
-            //{
-            //    Console.WriteLine(att.ElementName);
-            //}
-
-            //foreach (var att in KeyList)
-            //{
-            //    Console.WriteLine(att.ElementName);
-            //}
-
-            //foreach (var item in t.GetType().GetMembers())
-            //{
-            //    foreach (var att in item.CustomAttributes)
-            //    {
-            //        if (att.AttributeType == typeof(IniSectionAttribute))
-            //        {
-            //            Console.WriteLine( att ); 
-            //            members.Add(item);
-            //        }
-            //    }
-            //}
         }
 
 
@@ -86,16 +62,27 @@ namespace IniSerializer
             var Atts = from at in t.GetType().GetProperties()
                        where at.GetCustomAttributes(false).Any(a => a is IniKeyAttribute)
                        select at;
-
-            //var Attk = from at in t.GetProperties()
-            //           where at.GetCustomAttributes(false).Any(a => a is IniKeyAttribute && a is IniKeyAttribute)
-            //           select at;
-            getAtt(t);
+            IniKeyAttribute ika = null;
+            IniSectionAttribute isa;
+            IniSectionAttribute isaPrev = new IniSectionAttribute();
             foreach (var section in Atts)
             {
-                IniKeyAttribute ika;
+                isa = (IniSectionAttribute)Attribute.GetCustomAttribute(section, typeof(IniSectionAttribute));
                 ika = (IniKeyAttribute)Attribute.GetCustomAttribute(section, typeof(IniKeyAttribute));
+
+                if (isaPrev.ElementName == null)
+                {
+                    Console.WriteLine($"[{isa.ElementName}]");
+                }
+                else
+                {
+                    if (!Equals(isa.ElementName, isaPrev.ElementName))
+                    {
+                        Console.WriteLine($"[{isa.ElementName}]");
+                    }
+                }
                 Console.WriteLine(ika.ElementName + " = " + section.GetValue(t));
+                isaPrev = isa;
             }
         }
     }

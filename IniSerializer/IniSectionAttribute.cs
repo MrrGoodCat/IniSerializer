@@ -9,6 +9,6 @@ namespace IniSerializer
     //[System.AttributeUsage(AttributeTargets.Class)]
     public class IniSectionAttribute : Attribute
     {
-        public string ElementName { get; set; }
+        public string ElementName { get; set; }// = "Default";
     }
 }
